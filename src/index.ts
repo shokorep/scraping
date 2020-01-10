@@ -1,116 +1,80 @@
 import axios from "axios";
 import cheerio from "cheerio";
-import { checkServerIdentity } from "tls";
-
-
 
 (async () => {
-    // axios.get("https://qiita.com/advent-calendar/2019/nuxt-js").then((res: any)=>{
-    //     console.log(res.data)
-    // })
-    let aaa: any;
-    aaa = await axios.get("https://qiita.com/advent-calendar/2019/nuxt-js");
+    let calenderPage: any;
+    calenderPage = await axios.get("https://qiita.com/advent-calendar/2019/nuxt-js");
+    
     let stCalender: string
-    if(aaa.status === 200) {
-        stCalender = aaa.data
+    if(calenderPage.status === 200) {
+        stCalender = calenderPage.data
     }else {
         stCalender = ''
     }
     const $: any = cheerio.load(stCalender, {decodeEntities: false});
-    // const test = $("div[class='adventCalendarCalendar_comment']").text
-    // console.log({test},test)
     
-    // $("div[class='adventCalendarCalendar_comment']").each((item: any) => {
-    //     const link = $(item);
-    //     var text = link.text();
-    //     var href = link.attr("href");
-
-    //     console.log({link},{text},{href})
-
-    // })
-    
-    // $("a").each((item: any) => {
-    //   const link = $(item);
-    //   var text = link.text();
-    //   var href = link.attr("href");
-
-    //   console.log({ link }, { text }, { href });
-    // });
-    let articles: [{}]
+    type article = { itemTitle:string, itemUrl:string, qiitaFlg:boolean, starCount:number}
+    let articles:article[] = new Array()
     $("div[class='adventCalendarCalendar_comment']").each((index:number, element:any)=>{
-        const itemTitle: string = $(element)
-          .find("a")
-          .text();
-          const itemUrl: string = $(element)
-          .find("a")
-          .attr("href");
-          let qiitaFlg
-          if(itemUrl.indexOf('https://qiita.com')>= 0) {
-            qiitaFlg = true
-          } else {
-            qiitaFlg = false
-          } 
-        console.log({itemTitle},{itemUrl},{qiitaFlg})
-        articles.push({ itemTitle, itemUrl, qiitaFlg });
+        const itemTitle: string = $(element).find("a").text();
+        const itemUrl: string = $(element).find("a").attr("href");
+        let qiitaFlg
+        if(itemUrl.indexOf('https://qiita.com')>= 0) {
+          qiitaFlg = true
+        } else {
+          qiitaFlg = false
+        } 
+        let starCount = 0
+        const content:article = {itemTitle, itemUrl,qiitaFlg,starCount}
+        articles.push(content)
+      })
+    console.table(articles)
+    articles.forEach(async (content:article)=> {
+      if(content.qiitaFlg && (content.itemUrl.indexOf('(')<0 && content.itemUrl.indexOf('（')<0)) {
+        const detailPage = await axios.get(content.itemUrl)
+        let detail: string
+        if(detailPage.status== 200) {
+          detail = detailPage.data
+        } else {
+          detail =''
+        }
+        // console.log(content.itemTitle)
+        const $: any = cheerio.load(detail, {decodeEntities: false})
+
+        // ダメだったやつその１
+        // $("div[class='it-Actions_item it-Actions_item-like likable]").each((index:number, element:any)=>{
+          // $("div[class='p-items_container']").each((index:number, element:any)=>{
+          //   // $content("div[class='it-Actions_item it-Actions_item-like likable']").each((index:number, element:any)=>{
+          //     console.log('Aaaaaaaaaaaa')
+          //     const test = $(element).find('a.it-Actions_likeCount').text();
+
+          //     console.log({test})
+          //     // console.log('element.next()',element.next())
+          //   console.log({element},content.itemTitle)
+          // const starCount:number = $(element).find("a").text();
+          // console.log('content.itemUrl:',content.itemUrl,{starCount})
+        // })
+
+        // ダメだったやつその２
+        //  const test2 = $('.it-Actions_likeCount a').text();
+        //  console.log({test2})
+
+        // ダメだったやつその３　refarence http://info-i.net/cheerio-load
+        // $('.it-Actions_item it-Actions_item-like likable').each((index:number,ele:any)=>{
+        //   console.log('$(ele).text',$(ele).text)
+        // })
+
+        // これのDOMのchildrenを操作できれば良いのでは？？？？
+        $('.p-items_container').each((index:number,ele:any)=>{
+          console.log('$(ele).text',$(ele).text())
+          })
+
+        // なにかしらは受け取った
+        // const selection=$('p-items_container', 'dev');
+        // console.log({selection})
+
+      }
     })
-    console.table()
+    console.log('Happyyyyyyyyyyyyyyyyyyyyyyyy')
+
 })();
-
-    //     const url: string = "https://qiita.com/advent-calendar/2019/nuxt-js"
-//     let page: any
-//     page = await browser.newPage();
-//     await page.goto(url); // 表示したいURL
-//     console.log(page)
-    //  https.get(url, res: any => {
-    //   let html = "";
-    //   res.on("data", line => (html += line));
-    //   res.on("end", () => {
-    //     const dom = new JSDOM(html);
-    //     console.log(dom.window.document.querySelector("p").textContent);
-    //     // => list3
-    //   });
-    // });
-    // const document = jsdom.jsdom(page);
-    
-    // var matches: any = document.querySelectorAll("p");
-    // console.log('aaaaa')
-    // console.log(matches)
-    // const scrapingData = await page.evaluate(() => {
-    //   let dataList: string[]
-    //   const nodeList = document.querySelectorAll(
-    //     ".adventCalendarCalendar_comment"
-    //   );
-    //   let i: number = 0
-    //   console.log(nodeList)
-    //   console.log(i)
-    //   nodeList.forEach((_node: any) => {
-    //     // dataList.push(_node.innerText);
-    //     console.log(_node.innerText, 'i:',i);
-    //     i = i + 1
-    //   });
-    //   return dataList;
-//     });
-//     /*（何か処理）*/
-//     await page.screenshot({ path: 'screenShotPage.png' });
-//     browser.close();
-
-
-
-
-// function hello(name: string): string {
-//     return `Hello, ${name}!`;
-// }
-// console.log(hello("World"));
-
-
-
-// export async function main() {():string =>
-//   { console.log('aaaaa')
-//    console.log('bbbbbb')
-//    const title: string = "あいうえお" 
-//    return title
-//   }}
-
-  
-
-// main().then(() => console.log("aaaaa"))
