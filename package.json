@@ -1,0 +1,25 @@
+{
+  "name": "test",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^13.1.4",
+    "typescript": "^3.7.4",
+    "webpack": "^4.41.5"
+  },
+  "dependencies": {
+    "@types/cheerio": "^0.22.15",
+    "axios": "^0.19.1",
+    "cheerio": "^1.0.0-rc.3",
+    "document": "^0.4.7",
+    "jsdom": "^15.2.1"
+  }
+}
