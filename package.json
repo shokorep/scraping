@@ -5,13 +5,18 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "build": "ts-node src/index.ts",
+    "dev": "nodemon --watch src -e js,ts node_modules/ts-node/dist/bin.js src/index.ts",
+    "dev2":"nodemon"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^13.1.4",
+    "nodemon": "^2.0.2",
+    "ts-node": "^8.6.1",
     "typescript": "^3.7.4",
     "webpack": "^4.41.5"
   },
@@ -21,5 +26,15 @@
     "cheerio": "^1.0.0-rc.3",
     "document": "^0.4.7",
     "jsdom": "^15.2.1"
+  },
+  "nodemonConfig": {
+    "env": {
+      "NODE_ENV": "development"
+    },
+    "exec": "ts-node src/index.ts",
+    "ext": "ts",
+    "watch": [
+      "src"
+    ]
   }
 }

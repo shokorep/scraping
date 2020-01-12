@@ -33,7 +33,8 @@ const cheerio_1 = __importDefault(require("cheerio"));
     });
     console.table(articles);
     articles.forEach(async (content) => {
-        if (content.qiitaFlg && (content.itemUrl.indexOf('(') < 0 && content.itemUrl.indexOf('（') < 0)) {
+        // if(content.qiitaFlg && (content.itemUrl.indexOf('(')<0 && content.itemUrl.indexOf('（')<0)) {
+        if (content.itemUrl.indexOf('https://qiita.com/Yoshihiro-Hirose/items/') >= 0) {
             const detailPage = await axios_1.default.get(content.itemUrl);
             let detail;
             if (detailPage.status == 200) {
@@ -63,8 +64,15 @@ const cheerio_1 = __importDefault(require("cheerio"));
             // $('.it-Actions_item it-Actions_item-like likable').each((index:number,ele:any)=>{
             //   console.log('$(ele).text',$(ele).text)
             // })
-            $('.p-items_container').each((index, ele) => {
-                console.log('$(ele).text', $(ele).text());
+            console.log({ $ });
+            // // これのDOMのchildrenを操作できれば良いのでは？？？？
+            $('.p-items_stickyMenu.it-Actions').each((index, ele) => {
+                // console.log('$(ele).text',$(ele).text())
+                // const test = cheerio.html($('.it-Actions_item-like'))
+                ele.children.forEach((i) => {
+                    console.log({ i });
+                });
+                console.log({ ele });
             });
             // なにかしらは受け取った
             // const selection=$('p-items_container', 'dev');
