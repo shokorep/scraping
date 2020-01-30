@@ -8,7 +8,7 @@
     "tsc": "tsc",
     "build": "ts-node src/index.ts",
     "dev": "nodemon --watch src -e js,ts node_modules/ts-node/dist/bin.js src/index.ts",
-    "dev2":"nodemon"
+    "dev2": "nodemon"
   },
   "keywords": [],
   "author": "",
@@ -24,7 +24,6 @@
     "@types/cheerio": "^0.22.15",
     "axios": "^0.19.1",
     "cheerio": "^1.0.0-rc.3",
-    "document": "^0.4.7",
     "jsdom": "^15.2.1"
   },
   "nodemonConfig": {
